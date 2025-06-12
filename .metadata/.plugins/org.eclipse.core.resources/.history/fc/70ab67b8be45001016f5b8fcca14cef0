@@ -1,0 +1,6 @@
+spring.application.name=demo_gradle
+
+# 주석 입니다.
+#	Spring Boot의 각종 설정을 셋팅하는 파일입니다. DB연동, JPA 셋팅 , 각종 설정 등
+
+server.port=8081

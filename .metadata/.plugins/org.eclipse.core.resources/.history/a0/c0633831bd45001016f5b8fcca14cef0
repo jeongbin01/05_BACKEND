@@ -1,0 +1,20 @@
+package com.example.demo_gradle;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller // 스프링 프레임워크에서 객체를 자동으로 생성해서 컨테이너에 등록
+public class HellowController {
+	
+	
+	//개발자가 객채 생성
+	//HellowController hello = new HellowController();
+	
+	@GetMapping("/")
+	@ResponseBody
+	public String hello() {
+		
+		return "index";
+	}
+}

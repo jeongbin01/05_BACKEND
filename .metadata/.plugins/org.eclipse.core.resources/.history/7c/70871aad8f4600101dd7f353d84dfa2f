@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>파라미터 전달 예제</title>
+</head>
+<body>
+    <h1>파라미터 전달 예제</h1>
+
+    <!-- param1, param2가 없으면 기본 메시지 출력 -->
+    <div th:text="${param1} ?: 'param1이 없습니다.'">param1 placeholder</div>
+    <div th:text="${param2} ?: 'param2가 없습니다.'">param2 placeholder</div>
+</body>
+</html>

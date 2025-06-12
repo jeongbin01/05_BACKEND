@@ -1,0 +1,4 @@
+spring.application.name=shop_thymeleaf1
+
+# port : 데이터가 전송되는 port : 1 ~ 5,000 : 잗알려진 포트 , 사용자 지정 : 5,000 ~ 65,535
+server.port=8082

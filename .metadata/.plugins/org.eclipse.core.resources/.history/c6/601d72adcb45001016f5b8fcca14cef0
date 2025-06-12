@@ -1,0 +1,15 @@
+package com.example.demo_gradle.dto;
+
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class Memver {
+	
+	private String name ;
+	private String nicName ;
+	private int age;
+	private double weight;
+	private String addr;
+	
+	//DTD : 데이터를 전송해주는 역할을 함.
+}
