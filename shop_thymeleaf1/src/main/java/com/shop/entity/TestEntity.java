@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Entity
+//@Entity
 public class TestEntity {
 	
 	// 데이블에서 반드시 primary key 컬럼이 존재ㅐ 해야 한다.
@@ -23,4 +23,5 @@ public class TestEntity {
 	public double weight;
 	
 	public int age;
+
 }
