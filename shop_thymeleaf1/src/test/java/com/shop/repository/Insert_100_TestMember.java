@@ -1,0 +1,29 @@
+package com.shop.repository;
+
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.shop.entity.Test_Member;
+
+
+@SpringBootTest
+public class Insert_100_TestMember {
+
+	@Autowired
+	TestMemberRepository tesmMemberRepository;
+	
+	@Test
+	void insert100_testMenber() {
+		
+		for (int i = 1; i <= 100; i++) {
+			Test_Member t = new Test_Member();
+			
+			t.setCreateDate(LocalDateTime.now());
+		
+			tesmMemberRepository.save(t);
+		}
+	}
+}
