@@ -16,7 +16,7 @@ public class Select_Test {
     private QuestionRepository questionRepository;
 
     @Test
-    void selectText() {
+    void selectTest() {
     	
     	Question q = new Question();
     	
