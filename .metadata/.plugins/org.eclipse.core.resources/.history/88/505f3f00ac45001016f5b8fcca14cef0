@@ -1,3 +1,0 @@
-rootProject.name = 'demo_gradle'
-// https://mvnrepository.com/artifact/org.projectlombok/lombok
-implementation("org.projectlombok:lombok:1.18.38")

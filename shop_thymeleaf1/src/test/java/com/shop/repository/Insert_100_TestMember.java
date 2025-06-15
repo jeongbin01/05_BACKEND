@@ -8,22 +8,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.shop.entity.Test_Member;
 
-
 @SpringBootTest
 public class Insert_100_TestMember {
 
-	@Autowired
-	TestMemberRepository tesmMemberRepository;
-	
-	@Test
-	void insert100_testMenber() {
-		
-		for (int i = 1; i <= 100; i++) {
-			Test_Member t = new Test_Member();
-			
-			t.setCreateDate(LocalDateTime.now());
-		
-			tesmMemberRepository.save(t);
-		}
-	}
+    @Autowired
+    TestMemberRepository testMemberRepository;  
+
+    @Test
+    void insert100_testMember() {  
+        for (int i = 1; i <= 100; i++) {
+            Test_Member tm = new Test_Member();
+            tm.setName("회원" + i);
+            tm.setAge(20 + (i % 10));
+            tm.setCreateDate(LocalDateTime.now());
+            testMemberRepository.save(tm);  
+        }
+    }
 }

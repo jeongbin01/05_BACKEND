@@ -1,6 +1,0 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-    <div class="header" th:fragment="header">
-		<H2>헤더 영역 부분</H2>
-    </div>
-</html>
