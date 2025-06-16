@@ -24,8 +24,8 @@ public class Answer {
 
     private LocalDateTime createDate; 
 
-    // Answer(자식) : Many, Question(부모) : One
-    @ManyToOne							//하나의 질문 많은 답변 저장할 수 있다.
+    // Answer(자식) : Many, Question(부모)  : One 
+    @ManyToOne                              // 하나의 질문 많은 답변을 저장 할 수 있다.  
     private Question question;  
 
 }
