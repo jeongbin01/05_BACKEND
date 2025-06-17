@@ -21,12 +21,14 @@ public class AnswerController {
     private final QuestionService questionService;
     private final AnswerService answerService;
 
-    // 답변 등록
+    // 답변 등록    
     @PostMapping("/answer/create/{id}")
     public String createAnswer(Model model, 
     		@PathVariable("id") Integer id,
             @RequestParam("content") String content) {
         Question q = this.questionService.getQuestion(id);
+        
+        // 답변을 DB에 저장
         this.answerService.create(q, content);
 
         return String.format("redirect:/question/detail/%s", id);

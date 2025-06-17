@@ -32,6 +32,7 @@ public class QuestionService {
     	if (q.isPresent()) {
             return q.get();
         } else {
+        	// 예외를 강제로 발생 시킴 
             throw new DataNotFoundException("질문 테이터를 찾지 못했습니다.");
         }
     }
