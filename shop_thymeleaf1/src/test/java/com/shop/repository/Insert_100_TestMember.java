@@ -12,16 +12,17 @@ import com.shop.entity.Test_Member;
 public class Insert_100_TestMember {
 
     @Autowired
-    TestMemberRepository testMemberRepository;  
+    TestMemberRepository testMemberRepository;
 
     @Test
-    void insert100_testMember() {  
+    void insert100_testMember() {
         for (int i = 1; i <= 100; i++) {
             Test_Member tm = new Test_Member();
             tm.setName("회원" + i);
+            tm.setPhone("010-0000-" + String.format("%04d", i));
             tm.setAge(20 + (i % 10));
             tm.setCreateDate(LocalDateTime.now());
-            testMemberRepository.save(tm);  
+            testMemberRepository.save(tm);
         }
     }
 }
