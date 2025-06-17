@@ -25,7 +25,7 @@ public class Select_AnswerList {
 	void selectAnswerList() {
 		// 1번 질문에 대한 답변들을 출력 
 		Optional<Question> oq = 
-				questionRepository.findById(3); 
+				questionRepository.findById(4); 
 		
 		Question q = new Question(); 
 		
@@ -41,9 +41,9 @@ public class Select_AnswerList {
 		System.out.println("========================");
 		
 		List<Answer> answerList = q.getAnswerList(); 
-		System.out.println("=== 답변 내용 출력 =====");
 		
-		 
+		//	질믄에 대한 답변
+		System.out.println("=== 답변 내용 출력 ====="); 
 		for (int i = 0 ; i < answerList.size(); i++) {
 			Answer a = new Answer() ;
 			a = answerList.get(i); 

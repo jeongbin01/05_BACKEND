@@ -12,9 +12,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
+
 @Getter
 @Setter
-@Entity		// DB의 테이블과 연결되어 있는 클래스 : 자바 클래스가 테이블과 연결 
+@Entity		//	DB의 테이블과 연결되어 있는 클래스 : 자바 클래스가 테이블과 연결 
 public class Question {
 
 	@Id
@@ -29,7 +30,8 @@ public class Question {
 
 	private LocalDateTime createDate;
 	
-	//Question(부모)  : One 
+	//	Question(부모)  : One 
+	//	질문에 대한 답변 글이 저장된 리스트
 	@OneToMany(mappedBy="question" , cascade=CascadeType.REMOVE)
 	private List<Answer> answerList; 
 

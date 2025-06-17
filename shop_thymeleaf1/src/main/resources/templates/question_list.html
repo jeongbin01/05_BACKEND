@@ -1,17 +1,22 @@
-<h2>질문 게시판</h2>
-<hr>
-<table>
-    <thead>
-        <tr>
-            <th>제목</th>
-            <th>작성일시</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="question : ${questionList}">
-            <td th:text="${question.subject}"></td>
-            <td th:text="${question.createDate}"></td>
-        </tr>
-    </tbody>
-</table>
+<style>
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+</style>
 
+<table>
+  <thead>
+    <tr>
+      <th>제목</th>
+      <th>작성일시</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="question : ${questionList}">
+      <td th:text="${question.subject}"></td>
+      <td th:text="${question.createDate}"></td>
+    </tr>
+  </tbody>
+</table>

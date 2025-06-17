@@ -34,7 +34,7 @@ public class Insert_Answer2 {
 		// 2. Answer 에 답변을 저장 
 		Answer a = new Answer(); 
 		
-		a.setContent("4번 글에 대한 답변 4");
+		a.setContent("4번 글에 대한 답변 3");
 		a.setCreateDate(LocalDateTime.now());
 		a.setQuestion(q); 
 		

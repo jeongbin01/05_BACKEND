@@ -29,7 +29,7 @@ public class QuestionController {
 		//	service : Controller 에서 Repository 를 직접 접근할 경우 보안 이슈 발생
 			//	Controller 에서 직접 비즈니스 로직을 구현할 경우 중복코드 발생
 			//	Service 에 비즈니스 로직을 위임하면 코드 재사용성과 보안성 강화 가능
-			// 유지 보수를 쉽게 할 수 있다.
+			// 유지 보수를 쉽게 할 수 있다. 
 
 	private final QuestionService questionService;
 
@@ -37,6 +37,7 @@ public class QuestionController {
     public String list(Model model) {
 
         // 2. 비즈니스 로직 처리 (Service 호출)
+    	//	getList : 서비스 잘 요청을 하게 되었다
         List<Question> questions = questionService.getList();
 
         // 3. 모델 객체에 변수의 값을 담아서 클라이언트 페이지로 전송
@@ -47,5 +48,3 @@ public class QuestionController {
         return "question_list";
     }
 }
-
-//               question 서비스 잘 요청

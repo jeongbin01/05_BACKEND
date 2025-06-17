@@ -1,4 +1,3 @@
-
 package com.shop.repository;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class Select_AnswerList2 {
 	void selectAnswerList2() {
 		
 		Optional<Question> oq = 
-				questionRepository.findById(4); 
+				questionRepository.findById(1); 
 		
 		Question q = new Question(); 
 		
@@ -40,13 +39,14 @@ public class Select_AnswerList2 {
 		List<Answer> answerList = 
 				q.getAnswerList(); 
 		
+		//	글에 대한 답변
 		System.out.println("== for 문을 사용해서 답변을 출력 : ");
 		for (int i = 0 ; i < answerList.size(); i++) {
 			Answer a = new Answer(); 
 			a = answerList.get(i); 
-			System.out.print(a.getId() + "\t");
-			System.out.print(a.getContent() + "\t");
-			System.out.print(a.getCreateDate() + "\t");
+			System.out.print("아이디" + a.getId() + "\t");
+			System.out.print("내용" + a.getContent() + "\t");
+			System.out.print("날짜" + a.getCreateDate() + "\t");
 			System.out.println();
 			
 		}

@@ -1,6 +1,6 @@
 package com.shop.repository;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -10,51 +10,41 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.shop.entity.Answer;
 import com.shop.entity.Question;
 
-import jakarta.transaction.Transactional;
-
 @SpringBootTest
 public class Insert_Answer {
-	// Question 객체에서  answerList 출력 
+	
+	// 답변 테이블에 값넣기 
 	
 	@Autowired
-	QuestionRepository questionRepository; 
+	QuestionRepository questionRepository;
+	
+	@Autowired
+	AnswerRepository answerRepository; 
 	
 	
 	@Test
-	@Transactional             // Question , Answer 을 하나의 트랜잭션에서 처리 
-	void selectAnswerList() {
-		// 1번 질문에 대한 답변들을 출력 
+	 void insertAnswer() {
+		
+		//1. 답변 테이블에 값을 넣기 위해서는 어떤 질문에 대한 답변인지 가지고 와야 한다. 
+		//   답변을 저장 할 Question객체를 먼저 가져와야 한다. 
 		Optional<Question> oq = 
-				questionRepository.findById(1); 
+				questionRepository.findById(3); 
 		
 		Question q = new Question(); 
-		
 		if (oq.isPresent()) {
 			q = oq.get(); 
 		}
 		
-		// 끄집어낸 Question 출력 
-		System.out.println(q.getId());
-		System.out.println(q.getContent());
-		System.out.println(q.getSubject());
-		System.out.println(q.getCreateDate());
-		System.out.println("========================");
+		// 2. Answer 객체에 setter 를 사용해서 답글을 입력한다. 
+		Answer a = new Answer(); 
+		a.setContent("3번 질문에 대한 답변 5");
+		a.setCreateDate(LocalDateTime.now());
+		a.setQuestion(q);
 		
-		List<Answer> answerList = q.getAnswerList(); 
-		System.out.println("=== 답변 내용 출력 =====");
+		// 3. AnswerRepository를 사용한 저장 
 		
+		answerRepository.save(a); 
 		 
-		for (int i = 0 ; i < answerList.size(); i++) {
-			Answer a = new Answer() ;
-			a = answerList.get(i); 
-			
-			System.out.print("아이디 : " + a.getId() + "\t");
-			System.out.print("내용 : " + a.getContent() + "\t");
-			System.out.print("날짜 : " + a.getCreateDate() + "\t");
-			System.out.println();
-		}
-		
-		
-	}
-	
+	 }
+
 }
