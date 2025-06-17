@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.shop.entity.Question;
 import com.shop.service.QuestionService;
@@ -35,7 +36,6 @@ public class QuestionController {
 
     @GetMapping("/question/list")  // http://localhost:8082/question/list
     public String list(Model model) {
-
         // 2. 비즈니스 로직 처리 (Service 호출)
     	//	getList : 서비스 잘 요청을 하게 되었다
         List<Question> questions = questionService.getList();
@@ -46,5 +46,26 @@ public class QuestionController {
         // 4. 뷰 페이지 전송
 //        System.out.println("컨트롤러 요청 성공");
         return "question_list";
+    }
+
+    // 질문 상세 페이지
+    @GetMapping("/question/detail/{id}")
+    public String detail(Model model,
+    		@PathVariable("id") Integer id
+    		) {
+        System.out.println("id 값: " + id);
+        //	넘겨받은 id 값을 가지고 QuestionRepository.finByid(id);
+        
+        Question q = 
+        		questionService.getQuestion(id);        
+        
+/*
+        System.out.println(q.getId());
+        System.out.println(q.getSubject());
+        System.out.println(q.getContent());
+ */
+        
+        model.addAttribute("question", q);
+        return "question_detail";
     }
 }
