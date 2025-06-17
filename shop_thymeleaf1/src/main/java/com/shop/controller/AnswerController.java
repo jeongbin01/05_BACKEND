@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class AnswerController {
 	//	Client => controller => service => repository => entity => DB
 	
-	//	반주입
+	//	의존성 주입
     private final QuestionService questionService;
     private final AnswerService answerService;
 
@@ -26,8 +26,8 @@ public class AnswerController {
     public String createAnswer(Model model, 
     		@PathVariable("id") Integer id,
             @RequestParam("content") String content) {
-        Question question = this.questionService.getQuestion(id);
-        this.answerService.create(question, content);
+        Question q = this.questionService.getQuestion(id);
+        this.answerService.create(q, content);
 
         return String.format("redirect:/question/detail/%s", id);
     }
