@@ -37,6 +37,8 @@ public class QuestionService {
             throw new DataNotFoundException("질문 테이터를 찾지 못했습니다.");
         }
     }
+    
+    // 질문 등록
     public void create(String subject, String content) {
         Question q = new Question();
         q.setSubject(subject);

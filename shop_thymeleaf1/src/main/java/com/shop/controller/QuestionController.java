@@ -7,11 +7,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import com.shop.dto.QuestionForm;
 import com.shop.entity.Question;
 import com.shop.service.QuestionService;
 
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
 import lombok.RequiredArgsConstructor;
 
 /*
@@ -27,64 +29,43 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class QuestionController {
 
-	//	MVC 모델로 처리
-	//	client 요청 => Controller => Service => Repository => Entity => DB
-		//	service : Controller 에서 Repository 를 직접 접근할 경우 보안 이슈 발생
-			//	Controller 에서 직접 비즈니스 로직을 구현할 경우 중복코드 발생
-			//	Service 에 비즈니스 로직을 위임하면 코드 재사용성과 보안성 강화 가능
-			// 유지 보수를 쉽게 할 수 있다.
+    // MVC 모델로 처리
+    // client 요청 => Controller => Service => Repository => Entity => DB
+    // service : Controller 에서 Repository 를 직접 접근할 경우 보안 이슈 발생
+    // Controller 에서 직접 비즈니스 로직을 구현할 경우 중복코드 발생
+    // Service 에 비즈니스 로직을 위임하면 코드 재사용성과 보안성 강화 가능
+    // 유지 보수를 쉽게 할 수 있다.
 
-	private final QuestionService questionService;
+    private final QuestionService questionService;
 
     @GetMapping("/question/list")  // http://localhost:8082/question/list
     public String list(Model model) {
-        // 2. 비즈니스 로직 처리 (Service 호출)
-    	//	getList : 서비스 잘 요청을 하게 되었다
         List<Question> questions = questionService.getList();
-
-        // 3. 모델 객체에 변수의 값을 담아서 클라이언트 페이지로 전송
         model.addAttribute("questionList", questions);
-
-        // 4. 뷰 페이지 전송
-//        System.out.println("컨트롤러 요청 성공");
         return "question_list";
     }
 
     // 질문 상세 페이지
     @GetMapping("/question/detail/{id}")
-    public String detail(Model model,
-    		@PathVariable("id") Integer id
-    		) {
-        System.out.println("id 값: " + id);
-        //	넘겨받은 id 값을 가지고 QuestionRepository.findById(id);
-        
-        Question q = questionService.getQuestion(id);        
-        
-/*
-        System.out.println(q.getId());
-        System.out.println(q.getSubject());
-        System.out.println(q.getContent());
- */
-        
+    public String detail(Model model, @PathVariable("id") Integer id) {
+        Question q = questionService.getQuestion(id);
         model.addAttribute("question", q);
         return "question_detail";
     }
 
-    // 질문 등록 하기 (입력폼 보여주기)
+    // 질문 등록 폼 화면
     @GetMapping("/question/create")
-    public String questionCreate() {
+    public String questionCreate(QuestionForm questionForm) {
         return "question_form";
     }
     
-    // 질문 등록 처리 (폼 submit 처리)
+    // 질문 등록 처리
     @PostMapping("/question/create")
-    public String questionCreate(
-            @RequestParam(value="subject") String subject, 
-            @RequestParam(value="content") String content) {
-
-        // TODO 질문을 저장한다.
-    	this.questionService.create(subject, content);
-
-        return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "question_form";
+        }
+        questionService.create(questionForm.getSubject(), questionForm.getContent());
+        return "redirect:/question/list";
     }
 }
