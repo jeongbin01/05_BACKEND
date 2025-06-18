@@ -1,5 +1,6 @@
 package com.shop.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,5 +36,12 @@ public class QuestionService {
         	// 예외를 강제로 발생 시킴 
             throw new DataNotFoundException("질문 테이터를 찾지 못했습니다.");
         }
+    }
+    public void create(String subject, String content) {
+        Question q = new Question();
+        q.setSubject(subject);
+        q.setContent(content);
+        q.setCreateDate(LocalDateTime.now());
+        this.questionRepository.save(q);
     }
 }

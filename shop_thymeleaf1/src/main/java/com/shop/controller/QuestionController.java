@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.shop.entity.Question;
 import com.shop.service.QuestionService;
@@ -14,9 +16,9 @@ import lombok.RequiredArgsConstructor;
 
 /*
 @Component : 일반 클래스를 빈 등록
-@Controller : Controller 클래스를 빈 등록
+@Controller : Controller 를 빈 등록
 @Service : Service 클래스를 빈 등록
-@Repository : Repository 클래스를 빈 등록
+@Repository : Repository 를 빈 등록
 */
 
 // Controller 의 역할 : 1. client의 요청을 받는다. => 2. 비즈니스 로직 처리 => 3. 뷰 페이지 전송
@@ -30,7 +32,7 @@ public class QuestionController {
 		//	service : Controller 에서 Repository 를 직접 접근할 경우 보안 이슈 발생
 			//	Controller 에서 직접 비즈니스 로직을 구현할 경우 중복코드 발생
 			//	Service 에 비즈니스 로직을 위임하면 코드 재사용성과 보안성 강화 가능
-			// 유지 보수를 쉽게 할 수 있다. 
+			// 유지 보수를 쉽게 할 수 있다.
 
 	private final QuestionService questionService;
 
@@ -54,10 +56,9 @@ public class QuestionController {
     		@PathVariable("id") Integer id
     		) {
         System.out.println("id 값: " + id);
-        //	넘겨받은 id 값을 가지고 QuestionRepository.finByid(id);
+        //	넘겨받은 id 값을 가지고 QuestionRepository.findById(id);
         
-        Question q = 
-        		questionService.getQuestion(id);        
+        Question q = questionService.getQuestion(id);        
         
 /*
         System.out.println(q.getId());
@@ -67,5 +68,23 @@ public class QuestionController {
         
         model.addAttribute("question", q);
         return "question_detail";
+    }
+
+    // 질문 등록 하기 (입력폼 보여주기)
+    @GetMapping("/question/create")
+    public String questionCreate() {
+        return "question_form";
+    }
+    
+    // 질문 등록 처리 (폼 submit 처리)
+    @PostMapping("/question/create")
+    public String questionCreate(
+            @RequestParam(value="subject") String subject, 
+            @RequestParam(value="content") String content) {
+
+        // TODO 질문을 저장한다.
+    	this.questionService.create(subject, content);
+
+        return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
     }
 }
