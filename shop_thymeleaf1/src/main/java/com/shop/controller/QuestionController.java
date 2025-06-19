@@ -76,5 +76,6 @@ public class QuestionController {
         }
         questionService.create(questionForm.getSubject(), questionForm.getContent());
         return "redirect:/question/list";
+                
     }
 }
