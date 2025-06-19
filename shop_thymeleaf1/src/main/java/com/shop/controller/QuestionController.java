@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.shop.dto.AnswerForm;
 import com.shop.dto.QuestionForm;
 import com.shop.entity.Question;
 import com.shop.service.QuestionService;
@@ -47,21 +48,24 @@ public class QuestionController {
 
     // 질문 상세 페이지
     @GetMapping("/question/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id) {
+    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
         Question q = questionService.getQuestion(id);
+        if (q == null) {
+            return "error/404";  // 예: 404 페이지를 만들어놓았다면
+        }
         model.addAttribute("question", q);
         return "question_detail";
     }
 
     // 질문 등록 폼 화면
     @GetMapping("/question/create")
-    public String questionCreate(QuestionForm questionForm) {
+    public String showQuestionCreateForm(QuestionForm questionForm) {
         return "question_form";
     }
     
     // 질문 등록 처리
     @PostMapping("/question/create")
-    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+    public String processQuestionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
