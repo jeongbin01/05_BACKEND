@@ -1,45 +1,89 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
 
-    <!-- 질문 -->
-    <h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
-    <div class="card my-3">
-        <div class="card-body">
-            <div class="card-text" style="white-space: pre-line;" th:text="${question.content}">내용</div>
-            <div class="d-flex justify-content-end">
-                <div class="badge bg-light text-dark p-2 text-start">
-                    <div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}">작성일시</div>
-                </div>
+<!-- 질문 -->
+<h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
+<div class="card my-3">
+    <div class="card-body">
+        <div class="card-text" style="white-space: pre-line;" th:text="${question.content}">내용</div>
+        <div class="d-flex justify-content-end">
+            <div class="badge bg-light text-dark p-2 text-start">
+                <div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}">작성일시</div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- 답변의 갯수 표시 -->
-    <h5 class="border-bottom my-3 py-2" 
-        th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
+<!-- 답변의 갯수 표시 -->
+<h5 class="border-bottom my-3 py-2"
+    th:text="|${commentPaging.totalElements}개의 답변이 있습니다.|"></h5>
 
-    <!-- 답변 반복 시작 -->
-    <div class="card my-3" th:each="answer : ${question.answerList}">
-        <div class="card-body">
-            <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}">내용</div>
-            <div class="d-flex justify-content-end">
-                <div class="badge bg-light text-dark p-2 text-start">
-                    <div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}">작성일시</div>
-                </div>
+<!-- 답변 반복 시작 -->
+<div class="card my-3" th:each="answer : ${commentPaging.content}">
+    <div class="card-body">
+        <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}">내용</div>
+        <div class="d-flex justify-content-end">
+            <div class="badge bg-light text-dark p-2 text-start">
+                <div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}">작성일시</div>
             </div>
         </div>
     </div>
-    <!-- 답변 반복 끝 -->
+</div>
+<!-- 답변 반복 끝 -->
 
-    <!-- 답변 작성 -->
-    <form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}" method="post" class="my-3">
-        <!-- 유효성 검증 오류 출력 -->
-        <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-            <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
-        </div>
-        <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
-        <input type="submit" value="답변등록" class="btn btn-primary my-2">
-    </form>
+<!-- 댓글 페이징 처리 시작 -->
+<div th:if="${!commentPaging.isEmpty()}">
+    <ul class="pagination justify-content-center">
+
+        <!-- 블럭 페이징 계산 -->
+        <th:block th:with="
+            blockSize=5,
+            currentPage=${commentPaging.number},
+            totalPages=${commentPaging.totalPages},
+            startBlock=${(currentPage / blockSize) * blockSize},
+            endBlock=${(startBlock + blockSize) > totalPages ? totalPages : (startBlock + blockSize)}
+        ">
+
+            <!-- 이전 블럭 -->
+            <li class="page-item" th:classappend="${startBlock == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{|/question/detail/${question.id}|(commentPage=${startBlock - 1})}">이전</a>
+            </li>
+
+            <!-- 페이지 번호 -->
+            <li class="page-item"
+                th:each="page : ${#numbers.sequence(startBlock, endBlock - 1)}"
+                th:classappend="${page == currentPage} ? 'active'">
+                <a class="page-link"
+                   th:text="${page + 1}"
+                   th:href="@{|/question/detail/${question.id}|(commentPage=${page})}"></a>
+            </li>
+
+            <!-- 다음 블럭 -->
+            <li class="page-item" th:classappend="${endBlock >= totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{|/question/detail/${question.id}|(commentPage=${endBlock})}">다음</a>
+            </li>
+
+        </th:block>
+    </ul>
+</div>
+
+<!-- 페이징 정보 표시 -->
+<div th:if="${!commentPaging.isEmpty()}" class="text-center text-muted small">
+    총 <span th:text="${commentPaging.totalElements}"></span>개 답변
+    <br>
+    <span th:text="${commentPaging.number + 1}"></span> / <span th:text="${commentPaging.totalPages}"></span> 페이지
+</div>
+<!-- 댓글 페이징 처리 끝 -->
+
+<!-- 답변 작성 -->
+<form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}" method="post" class="my-3">
+    <!-- 유효성 검증 오류 출력 -->
+    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+        <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+    </div>
+    <textarea th:field="*{content}" rows="10" class="form-control" placeholder="답변을 입력해주세요."></textarea>
+    <input type="submit" value="답변등록" class="btn btn-primary my-2">
+</form>
 
 </div>
 </html>
