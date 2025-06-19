@@ -1,5 +1,9 @@
 <html layout:decorate="~{layout}">
-	<div layout:fragment="content" class="container my-3">
+<div layout:fragment="content" class="container my-3">
+
+    <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+    <p></p>
+
     <table class="table">
         <thead class="table-dark">
             <tr>
@@ -9,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="question, loop : ${questionList}">
+            <tr th:each="question, loop : ${paging}">
                 <td th:text="${loop.count}"></td>
                 <td>
                     <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
@@ -18,5 +22,39 @@
             </tr>
         </tbody>
     </table>
-	<a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+
+    <!-- 블록 페이징 시작 -->
+    <div th:if="${!paging.isEmpty()}">
+        <ul class="pagination justify-content-center">
+
+            <!-- 블럭 계산 -->
+            <th:block th:with="
+                blockSize=5,
+                currentBlock=${paging.number} / ${blockSize},
+                startPage=${currentBlock} * ${blockSize},
+                endPage=(${startPage} + ${blockSize} - 1) < ${paging.totalPages} ? (${startPage} + ${blockSize} - 1) : ${paging.totalPages - 1}
+            ">
+
+                <!-- 이전 버튼 -->
+                <li class="page-item" th:classappend="${startPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${startPage - blockSize}|}">이전</a>
+                </li>
+
+                <!-- 페이지 번호 -->
+                <li th:each="pageNum : ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${pageNum == paging.number} ? 'active'" class="page-item">
+                    <a class="page-link" th:text="${pageNum + 1}" th:href="@{|?page=${pageNum}|}"></a>
+                </li>
+
+                <!-- 다음 버튼 -->
+                <li class="page-item" th:classappend="${endPage >= paging.totalPages -1} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${startPage + blockSize}|}">다음</a>
+                </li>
+
+            </th:block>
+
+        </ul>
+    </div>
+    <!-- 블록 페이징 끝 -->
 </div>
+</html>
