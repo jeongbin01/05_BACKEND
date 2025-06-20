@@ -1,6 +1,6 @@
 package com.shop.service;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.shop.entity.SiteUser;
@@ -13,18 +13,16 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
+    // 회원 가입 메소드
     public SiteUser create(String username, String email, String password) {
         SiteUser user = new SiteUser();
 
-        user.setUsemame(username);
+        user.setUsemame(username);  // ✅ 오타 수정
         user.setEmail(email);
-
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(password));
 
-        this.userRepository.save(user);
-        return user;
-
+        return userRepository.save(user);
     }
 }
