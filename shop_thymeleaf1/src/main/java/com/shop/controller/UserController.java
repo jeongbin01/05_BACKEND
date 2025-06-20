@@ -6,8 +6,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import org.springframework.ui.Model;
+import org.springframework.data.domain.Page;
 
 import com.shop.dto.UserCreateForm;
+import com.shop.entity.SiteUser;
 import com.shop.service.UserService;
 
 import jakarta.validation.Valid;
@@ -20,13 +25,15 @@ public class UserController {
     
     private final UserService userService; 
     
+    // 회원가입 폼
     @GetMapping("/signup")
-    public String signup(UserCreateForm userCreateForm) {
+    public String signupForm(UserCreateForm userCreateForm) {
         return "signup_form";
     }
 
+    // 회원가입 처리
     @PostMapping("/signup")
-    public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
+    public String processSignup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "signup_form";
         }
@@ -39,7 +46,8 @@ public class UserController {
 
         try {
             userService.create(userCreateForm.getUsername(), 
-                    userCreateForm.getEmail(), userCreateForm.getPassword1());
+                                userCreateForm.getEmail(), 
+                                userCreateForm.getPassword1());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
@@ -58,4 +66,11 @@ public class UserController {
         return "login_form";
     }
 
+    // 회원 리스트 페이징
+    @GetMapping("/list")
+    public String userList(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<SiteUser> userPage = userService.getUserList(page);
+        model.addAttribute("userPage", userPage);
+        return "user_list";
+    }
 }
