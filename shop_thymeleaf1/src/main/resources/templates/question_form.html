@@ -2,7 +2,7 @@
 <div layout:fragment="content" class="container">
     <h5 class="my-3 border-bottom pb-2">질문등록</h5>
     
-    <form th:action="@{/question/create}" th:object="${questionForm}" method="post">
+    <form action="/question/create" method="post"><input type="hidden" name="_csrf" value="GKJGOxF7XZaRUFIWl3GSzIjU830PWealy02lVGBCaOjVPCSWIJAlAnQfaPO8aWokpFym-u213h89a96I-nWRZ1lwCd7jDhX0"/>
         
         <!-- 유효성 오류 표시 -->
 		<div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">

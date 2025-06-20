@@ -26,13 +26,13 @@ public class Insert_1000_Answers {
     @Test
     void lnsert000Answers() {
         Question question = questionRepository.findById(1001)
-            .orElseThrow(() -> new IllegalArgumentException("ID가 1001인 질문을 찾을 수 없습니다.")); // 예외 메시지를 더 명확하게 수정
+            .orElseThrow(() -> new IllegalArgumentException("ID가 1001인 질문을 찾을 수 X")); // 예외 메시지를 더 명확하게 수정
 
         // 2) IntStream으로 1부터 1000까지 Answer 객체를 생성
         List<Answer> answers = IntStream.rangeClosed(1, 1000)
             .mapToObj(i -> {
                 Answer a = new Answer();
-                a.setContent("1001번 질문에 대한 테스트 답글 내용 " + i); // 내용도 일부 수정하여 구분 용이
+                a.setContent("1001번 질문에 대한 테스트 답글 내용 " + i); // 내용도 일부 수정하여 구분
                 a.setCreateDate(LocalDateTime.now());
                 a.setQuestion(question); // 조회한 1001번 질문과 연결
                 return a;
