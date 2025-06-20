@@ -25,7 +25,7 @@ public class Insert_1000_Answers {
 
     @Test
     void lnsert000Answers() {
-        Question question = questionRepository.findById(1001)
+        Question question = questionRepository.findById(999)
             .orElseThrow(() -> new IllegalArgumentException("ID가 1001인 질문을 찾을 수 없습니다.")); // 예외 메시지를 더 명확하게 수정
 
         // 2) IntStream으로 1부터 1000까지 Answer 객체를 생성

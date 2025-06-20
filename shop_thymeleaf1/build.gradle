@@ -61,6 +61,10 @@ dependencies {
 	//JUNIT 테스트 라이브러리 : 
 	testImplementation 'org.junit.jupiter:junit-jupiter' 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
 }
 
 tasks.named('test') {
