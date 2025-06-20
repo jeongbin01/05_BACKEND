@@ -51,10 +51,12 @@ public class QuestionController {
     // 질문 상세 보기 (질문 1개 조회 + 댓글 페이징 + 댓글 입력 폼 표시)
     @GetMapping("/question/detail/{id}")
     public String detail(Model model,
-                         @PathVariable("id") Integer id,
-                         AnswerForm answerForm,
-                         @RequestParam(value = "commentPage", defaultValue = "0") int commentPage) {
-        // 1) 질문 정보
+    		@PathVariable
+    		("id") Integer id, AnswerForm answerForm,
+    		@RequestParam
+    		(value = "commentPage", defaultValue = "0") int commentPage) {
+
+    	// 1) 질문 정보
         Question q = questionService.getQuestion(id);
         model.addAttribute("question", q);
 

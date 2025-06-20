@@ -41,8 +41,7 @@
             currentPage=${commentPaging.number},
             totalPages=${commentPaging.totalPages},
             startBlock=${(currentPage / blockSize) * blockSize},
-            endBlock=${(startBlock + blockSize) > totalPages ? totalPages : (startBlock + blockSize)}
-        ">
+            endBlock=${(startBlock + blockSize) > totalPages ? totalPages : (startBlock + blockSize)}">
 
             <!-- 이전 블럭 -->
             <li class="page-item" th:classappend="${startBlock == 0} ? 'disabled'">
