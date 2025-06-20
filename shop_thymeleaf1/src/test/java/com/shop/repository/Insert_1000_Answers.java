@@ -13,7 +13,7 @@ import com.shop.entity.Answer;
 import com.shop.entity.Question;
 
 @SpringBootTest
-public class DataLoaderAnswer_1000 {
+public class Insert_1000_Answers {
 
     // 답글 저장용 리포지토리
     @Autowired
@@ -24,7 +24,7 @@ public class DataLoaderAnswer_1000 {
     private QuestionRepository questionRepository;
 
     @Test
-    void load1000Answers() {
+    void lnsert000Answers() {
         Question question = questionRepository.findById(1001)
             .orElseThrow(() -> new IllegalArgumentException("ID가 1001인 질문을 찾을 수 없습니다.")); // 예외 메시지를 더 명확하게 수정
 
