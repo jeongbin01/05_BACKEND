@@ -31,7 +31,8 @@ public class SecurityConfig {
                     .addHeaderWriter(new XFrameOptionsHeaderWriter(
                         XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
             .formLogin((formLogin) -> formLogin
-                    .loginPage("/user/login")
+//                    .usernameParameter("username")  // 사용자 ID 파라미터 이름
+//                    .passwordParameter("password") // 비밀번호 파라미터 이름
                     .defaultSuccessUrl("/"))
             
             // 폼 로그인 처리
@@ -39,7 +40,7 @@ public class SecurityConfig {
                     .loginPage("/user/login")
                     .defaultSuccessUrl("/"))
             
-            // 로그 아웃
+            // 로그 아웃 처리
             .logout((logout) -> logout
                     .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                     .logoutSuccessUrl("/")
@@ -57,6 +58,8 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     
+    // SpringSecurity 에서 인증/허가 을 처리해주는 객체
+    // UserSecurityService.java 를 사용해서 인증과 허가를 처리.
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
