@@ -1,5 +1,7 @@
 package com.shop.controller;
 
+import java.security.Principal;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +14,10 @@ import com.shop.dto.AnswerForm;
 import com.shop.dto.QuestionForm;
 import com.shop.entity.Answer;
 import com.shop.entity.Question;
+import com.shop.entity.SiteUser;
 import com.shop.service.AnswerService;
 import com.shop.service.QuestionService;
+import com.shop.service.UserService;
 
 import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
@@ -38,6 +42,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final AnswerService answerService;
+    private final UserService userService;
 
     // 질문 리스트 (페이징 적용)
     @GetMapping("/question/list")  // http://localhost:8082/question/list
@@ -51,10 +56,9 @@ public class QuestionController {
     // 질문 상세 보기 (질문 1개 조회 + 댓글 페이징 + 댓글 입력 폼 표시)
     @GetMapping("/question/detail/{id}")
     public String detail(Model model,
-    		@PathVariable
-    		("id") Integer id, AnswerForm answerForm,
-    		@RequestParam
-    		(value = "commentPage", defaultValue = "0") int commentPage) {
+    		@PathVariable("id") Integer id, 
+    		AnswerForm answerForm,
+    		@RequestParam(value = "commentPage", defaultValue = "0") int commentPage) {
 
     	// 1) 질문 정보
         Question q = questionService.getQuestion(id);
@@ -73,14 +77,19 @@ public class QuestionController {
         return "question_form";
     }
 
-    // 질문 등록 처리
+    // 질문 등록 처리 (로그인 사용자 정보 추가)
     @PostMapping("/question/create")
-    public String processQuestionCreate(@Valid QuestionForm questionForm,
-                                         BindingResult bindingResult) {
+    public String processQuestionCreate(
+    		@Valid QuestionForm questionForm,
+    		BindingResult bindingResult,
+    		Principal principal
+    		) {
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
-        questionService.create(questionForm.getSubject(), questionForm.getContent());
+        
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
         return "redirect:/question/list";
     }
 }
