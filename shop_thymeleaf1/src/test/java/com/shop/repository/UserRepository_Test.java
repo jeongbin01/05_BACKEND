@@ -20,17 +20,17 @@ public class UserRepository_Test {
 		//Optional<SiteUser> findByusername(String username);
 		
 		Optional<SiteUser> s =
-				userRepository.findByusername("eee");
+				userRepository.findByusername("번호1000");
 		
-		SiteUser s1 = new SiteUser();
+		SiteUser su = new SiteUser();
 		
 		if(s.isPresent()) {
-			s1= s.get();
+			su= s.get();
 		}
 		
-		System.out.println(s1.getId());
-		System.out.println(s1.getEmail());
-		System.out.println(s1.getUsername());
-		System.out.println(s1.getPassword());
+		System.out.println(su.getId());
+		System.out.println(su.getEmail());
+		System.out.println(su.getUsername());
+		System.out.println(su.getPassword());
 	}
 }

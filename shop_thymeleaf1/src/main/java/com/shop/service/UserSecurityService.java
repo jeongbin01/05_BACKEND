@@ -21,8 +21,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class UserSecurityService implements UserDetailsService {
-
-    private final UserRepository userRepository;
+	
+	// 인증(ID 와 Pass), 허가 을  처리하는 서비스 : Secutity 프레임워크에서 처리
+    
+		// 인증 (Authentication) : ID + password 를 확인
+		// 허가 , 인가(Authorizagion) : 인증된 사용자에게 권한을 부여함.
+	
+	// UserDetailsService : 인터페이스를  상속해서 구현되지 않는 매소드를 구현해서 처리.
+	
+	private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
