@@ -2,6 +2,8 @@ package com.shop.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,9 +19,11 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+        	
         	// 모든 경로에 대해서 인증 없이 접속을 허용
             .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                 .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+            
             // H2 DB를 접속을 허용 
             .csrf((csrf) -> csrf
                     .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
@@ -29,7 +33,11 @@ public class SecurityConfig {
             .formLogin((formLogin) -> formLogin
                     .loginPage("/user/login")
                     .defaultSuccessUrl("/"))
-
+            
+            // 폼 로그인 처리
+            .formLogin((formLogin) -> formLogin
+                    .loginPage("/user/login")
+                    .defaultSuccessUrl("/"))
 
         ;
         return http.build();
@@ -41,6 +49,12 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
 
     
 }

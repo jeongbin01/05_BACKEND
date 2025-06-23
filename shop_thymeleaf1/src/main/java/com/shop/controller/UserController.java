@@ -25,13 +25,13 @@ public class UserController {
     
     private final UserService userService; 
     
-    // 회원가입 폼
+    // 회원가입 (뷰 페이지)
     @GetMapping("/signup")
     public String signupForm(UserCreateForm userCreateForm) {
         return "signup_form";
     }
 
-    // 회원가입 처리
+    // 회원가입 (DB에 저장)
     @PostMapping("/signup")
     public String processSignup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -45,9 +45,10 @@ public class UserController {
         }
 
         try {
-            userService.create(userCreateForm.getUsername(), 
-                                userCreateForm.getEmail(), 
-                                userCreateForm.getPassword1());
+            userService.create(
+            		userCreateForm.getUsername(), 
+                    userCreateForm.getEmail(), 
+                    userCreateForm.getPassword1());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
@@ -61,11 +62,14 @@ public class UserController {
         return "redirect:/";
     }
 
+    // 로그인 (뷰 페이지 처리)
     @GetMapping("/login")
     public String login() {
         return "login_form";
     }
 
+    // 로그인 처리 : <== Spring Security 에서 처리함. <== /user/login 의 post 매핑은 Security 에서 처리
+    
     // 회원 리스트 페이징
     @GetMapping("/list")
     public String userList(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {

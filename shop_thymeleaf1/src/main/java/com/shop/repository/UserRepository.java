@@ -9,7 +9,14 @@ import com.shop.entity.SiteUser;
 
 @Repository
 public interface UserRepository extends JpaRepository<SiteUser, Long> {
+
+	// 상속되어 내려오는 매소드
+		// findAll()
+		// findById()
+		// save()
+		// delete()
 	
+	// select * from Site_User where username = ?
     Optional<SiteUser> findByusername(String username);
 	
 }
