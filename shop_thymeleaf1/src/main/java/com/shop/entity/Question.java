@@ -34,6 +34,7 @@ public class Question {
     @ManyToOne
     private SiteUser author;
 
+    private LocalDateTime modifyDate;
 	
 	//	Question(부모)  : One 
 	//	질문에 대한 답변 글이 저장된 리스트

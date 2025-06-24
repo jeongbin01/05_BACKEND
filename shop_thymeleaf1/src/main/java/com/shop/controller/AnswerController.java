@@ -2,6 +2,7 @@ package com.shop.controller;
 
 import java.security.Principal;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class AnswerController {
     private final UserService userService;
 
     // 답변 등록 (유효성 검증 사용)
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/answer/create/{id}")
     public String createAnswer(Model model, 
     		@PathVariable("id") Integer id,

@@ -22,7 +22,10 @@ public class Answer {
     @Column(length = 20000)
     private String content;
 
-    private LocalDateTime createDate; 
+    private LocalDateTime createDate;
+    
+    private LocalDateTime modifyDate;
+    
 
     // Answer(자식) : Many, Question(부모)  : One 
     @ManyToOne                              // 하나의 질문 많은 답변을 저장 할 수 있다.  
@@ -30,6 +33,4 @@ public class Answer {
     
     @ManyToOne
     private SiteUser autUser;
-    
-
 }

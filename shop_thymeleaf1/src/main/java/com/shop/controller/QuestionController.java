@@ -3,12 +3,13 @@ package com.shop.controller;
 import java.security.Principal;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.shop.dto.AnswerForm;
 import com.shop.dto.QuestionForm;
@@ -20,76 +21,102 @@ import com.shop.service.QuestionService;
 import com.shop.service.UserService;
 
 import jakarta.validation.Valid;
-import org.springframework.validation.BindingResult;
 import lombok.RequiredArgsConstructor;
 
-/*
-@Component : 일반 클래스를 빈으로 등록
-@Controller : Controller 클래스를 빈으로 등록
-@Service : Service 클래스를 빈으로 등록
-@Repository : Repository 클래스를 빈으로 등록
-*/
-
-// Controller 의 역할: 1. Client의 요청 수신 → 2. 비즈니스 로직 처리 → 3. 뷰 반환
 @RequiredArgsConstructor
 @Controller
 public class QuestionController {
-
-    // MVC 패턴: Client → Controller → Service → Repository → Entity → DB
-    // Service를 사용하는 이유:
-    // - 보안상 Repository를 직접 접근하지 않음
-    // - 비즈니스 로직을 Service에 위임하여 재사용성과 유지보수성 증가
 
     private final QuestionService questionService;
     private final AnswerService answerService;
     private final UserService userService;
 
-    // 질문 리스트 (페이징 적용)
-    @GetMapping("/question/list")  // http://localhost:8082/question/list
-    public String list(Model model,
+    // 질문 리스트 (페이징)
+    @GetMapping("/question/list")
+    public String list(Model model, 
                        @RequestParam(value = "page", defaultValue = "0") int page) {
-        Page<Question> paging = this.questionService.getList(page);
+        Page<Question> paging = questionService.getList(page);
         model.addAttribute("paging", paging);
         return "question_list";
     }
 
-    // 질문 상세 보기 (질문 1개 조회 + 댓글 페이징 + 댓글 입력 폼 표시)
+    // 질문 상세 (댓글 페이징 포함)
     @GetMapping("/question/detail/{id}")
     public String detail(Model model,
-    		@PathVariable("id") Integer id, 
-    		AnswerForm answerForm,
-    		@RequestParam(value = "commentPage", defaultValue = "0") int commentPage) {
-
-    	// 1) 질문 정보
+                         @PathVariable("id") Integer id,
+                         AnswerForm answerForm,
+                         @RequestParam(value = "commentPage", defaultValue = "0") int commentPage) {
         Question q = questionService.getQuestion(id);
         model.addAttribute("question", q);
 
-        // 2) 댓글(답글) 페이징 정보
         Page<Answer> commentPaging = answerService.getList(q, commentPage);
         model.addAttribute("commentPaging", commentPaging);
-
         return "question_detail";
     }
 
-    // 질문 등록 폼
+    // 질문 작성 폼
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/question/create")
-    public String showQuestionCreateForm(QuestionForm questionForm) {
+    public String showCreateForm(QuestionForm questionForm) {
         return "question_form";
     }
 
-    // 질문 등록 처리 (로그인 사용자 정보 추가)
+    // 질문 등록 처리
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/question/create")
-    public String processQuestionCreate(
-    		@Valid QuestionForm questionForm,
-    		BindingResult bindingResult,
-    		Principal principal
-    		) {
+    public String processCreate(@Valid QuestionForm questionForm,
+                                 BindingResult bindingResult,
+                                 Principal principal) {
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
-        
-        SiteUser siteUser = this.userService.getUser(principal.getName());
-        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
+        SiteUser siteUser = userService.getUser(principal.getName());
+        questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
         return "redirect:/question/list";
     }
+
+    // 질문 수정 폼
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/question/modify/{id}")
+    public String showModifyForm(@PathVariable("id") Integer id,
+                                  QuestionForm questionForm,
+                                  Principal principal) {
+        Question question = questionService.getQuestion(id);
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+        }
+        questionForm.setSubject(question.getSubject());
+        questionForm.setContent(question.getContent());
+        return "question_form";
+    }
+
+    // 질문 수정 처리
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/question/modify/{id}")
+    public String processModify(@PathVariable("id") Integer id,
+                                 @Valid QuestionForm questionForm,
+                                 BindingResult bindingResult,
+                                 Principal principal) {
+        if (bindingResult.hasErrors()) {
+            return "question_form";
+        }
+        Question question = questionService.getQuestion(id);
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+        }
+        questionService.modify(question, questionForm.getSubject(), questionForm.getContent());
+        return "redirect:/question/detail/" + id;
+    }
+    
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String questionDelete(Principal principal, @PathVariable("id") Integer id) {
+        Question question = this.questionService.getQuestion(id);
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+        this.questionService.delete(question);
+        return "redirect:/";
+    }
+
 }
